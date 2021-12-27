@@ -1,6 +1,6 @@
 {
   "name": "swan-mongodb-dblogic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "all rights belong to swan-agency",
   "main": "index.js",
   "scripts": {
