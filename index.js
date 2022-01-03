@@ -30,6 +30,24 @@ class dbLogic {
         });
         
     }
+
+    loadDbLogic() {
+        return new Promise(async(resolve, reject) => {
+
+            try {
+
+                await require("./lib/loadDbLogic")(db);
+                resolve();
+
+            } catch (error) {
+
+                reject(error);
+
+            }
+
+        })
+        
+    }
     
     loadServices(){
 
@@ -62,13 +80,21 @@ class dbLogic {
                 //loading the schemas
                 await this.loadSchemas();
 
-                //loading the services
-                this.loadServices();
-
                 //connecting to the database
                 const db = this.db;
                 db.Promise = global.Promise;
+                db.Query.prototype.pagesCreated = false;
+                
+                //loading swan cms database logic
+                await this.loadDbLogic(db, swan.config.langs);
+                //loading the services
+                await this.loadServices(db);
+                
                 await db.connect(this.dbConfig.dbURI);
+                
+                //loading the models specified in pages directory
+                await this.createPages(this.query, swan.config.langs);
+                db.Query.prototype.pagesCreated = true;
 
                 resolve();
 
