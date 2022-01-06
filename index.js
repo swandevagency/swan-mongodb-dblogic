@@ -31,12 +31,30 @@ class dbLogic {
         
     }
 
-    loadDbLogic() {
+    loadDbLogic(db, langs) {
         return new Promise(async(resolve, reject) => {
 
             try {
 
-                await require("./lib/loadDbLogic")(db);
+                await require("./lib/loadDbLogic")(db, langs);
+                resolve();
+
+            } catch (error) {
+
+                reject(error);
+
+            }
+
+        })
+        
+    }
+
+    createPages(query, langs) {
+        return new Promise(async(resolve, reject) => {
+
+            try {
+
+                await require("./lib/createPages")(query, langs);
                 resolve();
 
             } catch (error) {
@@ -86,14 +104,14 @@ class dbLogic {
                 db.Query.prototype.pagesCreated = false;
                 
                 //loading swan cms database logic
-                await this.loadDbLogic(db, swan.config.langs);
+                await this.loadDbLogic(db, swan.keys.dbConfig.langs);
                 //loading the services
                 await this.loadServices(db);
                 
                 await db.connect(this.dbConfig.dbURI);
                 
                 //loading the models specified in pages directory
-                await this.createPages(this.query, swan.config.langs);
+                await this.createPages(this.query, swan.keys.dbConfig.langs);
                 db.Query.prototype.pagesCreated = true;
 
                 resolve();
