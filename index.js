@@ -49,12 +49,14 @@ class dbLogic {
         
     }
 
-    createPages(query, langs) {
+    createPages(query, langs, db) {
+        
         return new Promise(async(resolve, reject) => {
 
             try {
-
-                await require("./lib/createPages")(query, langs);
+                
+                await require("./lib/createPages")(db, query, langs);
+                
                 resolve();
 
             } catch (error) {
@@ -101,7 +103,6 @@ class dbLogic {
                 //connecting to the database
                 const db = this.db;
                 db.Promise = global.Promise;
-                db.Query.prototype.pagesCreated = false;
                 
                 //loading swan cms database logic
                 await this.loadDbLogic(db, swan.keys.dbConfig.langs);
@@ -111,8 +112,7 @@ class dbLogic {
                 await db.connect(this.dbConfig.dbURI);
                 
                 //loading the models specified in pages directory
-                await this.createPages(this.query, swan.keys.dbConfig.langs);
-                db.Query.prototype.pagesCreated = true;
+                await this.createPages(this.query, swan.keys.dbConfig.langs, db);
 
                 resolve();
 
