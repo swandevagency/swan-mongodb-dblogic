@@ -69,13 +69,13 @@ class dbLogic {
         
     }
     
-    loadServices(){
+    loadServices(db){
 
         return new Promise(async(resolve, reject) => {
 
             try {
 
-                await require('./lib/loadServices')();
+                require.main.require(`./src/database/services/${file}`)(db);
                 resolve();
 
             } catch (error) {
