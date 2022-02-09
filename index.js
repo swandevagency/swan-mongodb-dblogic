@@ -75,7 +75,7 @@ class dbLogic {
 
             try {
 
-                require.main.require(`./src/database/services/${file}`)(db);
+                require.main.require(`./src/database/services/index.js`)(db);
                 resolve();
 
             } catch (error) {
